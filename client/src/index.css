@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Hide scrollbars (for webkit browsers) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Make sure the root always fills the viewport */
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+/* Global background + text color */
+body {
+  @apply bg-gray-900 text-white;
+}
