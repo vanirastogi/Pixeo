@@ -12,14 +12,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   return (
     <div
       className={`
-        w-60 xl:w-72 bg-sky-900/80 border-r border-gray-200 flex flex-col justify-between items-center
-        fixed top-0 bottom-0 z-30 transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        sm:translate-x-0 sm:relative
+        w-60 xl:w-72 h-screen bg-sky-900 border-r border-gray-200 
+    flex flex-col justify-between items-center
+    fixed top-0 left-0 z-30 transform transition-transform duration-300 ease-in-out
+    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+    sm:translate-x-0 sm:relative
       `}
     >
       <div className="w-full">
-        {/* Logo or Brand */}
+        {/* Logo */}
         <div className="my-4 ml-7 text-xl font-bold text-white cursor-pointer select-none">
           PIXEO
         </div>

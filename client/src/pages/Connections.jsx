@@ -36,7 +36,7 @@ const Connections = () => {
   }
 
   return (
-    <div className="min-h-screen overflow-y-scroll no-scrollbar">
+    <div className="min-h-screen ">
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
         {/* title */}
         <div className="mb-6 text-center sm:text-left">
