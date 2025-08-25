@@ -9,6 +9,9 @@ connectToDatabase()
     app.listen(process.env.PORT || 8000, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
     })
+    app.get('/', (req, res) => {
+        res.send('Server is up and running!');
+    });
 })
 .catch((error) => {
     console.error('Failed to connect to the database:', error);
