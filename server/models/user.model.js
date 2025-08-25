@@ -62,10 +62,10 @@ const userSchema = new mongoose.Schema(
                 ref: "User" 
             }
         ],
-        password : {
-            type: String,
-            required: [true, "Password is required"],
-        },
+        // password : {
+        //     type: String,
+        //     required: [true, "Password is required"],
+        // },
         refreshToken : {
             type: String,
             default: ""
