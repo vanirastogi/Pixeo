@@ -17,3 +17,6 @@ connectToDatabase()
     console.error('Failed to connect to the database:', error);
     process.exit(1); // Exit the process with failure
 });
+ app.get('/', (req, res) => {
+        res.send('Server is up and running!');
+    });
