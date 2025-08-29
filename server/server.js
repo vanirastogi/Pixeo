@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import app from './app.js';
-import connectToDatabase from './db/index.js';
+import connectToDatabase from './src/db/index.js';
 
 dotenv.config();
 
@@ -10,6 +10,9 @@ connectToDatabase()
     console.log(`Server is running on port ${process.env.PORT}`);
     })
     app.get('/', (req, res) => {
+        res.send('Server is up and running!');
+    });
+    app.get('/messgaes ', (req, res) => {
         res.send('Server is up and running!');
     });
 })
