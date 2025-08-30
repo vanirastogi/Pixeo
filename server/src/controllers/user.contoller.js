@@ -17,77 +17,94 @@ export const getUserData = async (req, res) => {
     }
 }
 
+
 export const updateUserData = async (req, res) => {
-    try{
-        const { userId } = req.auth();
-        const { full_name, username, bio, location } = req.body;
+  try {
+    const { userId } = req.auth();
+    let { username, bio, location, full_name } = req.body;
 
-        const tempUser = await User.findById(userId);
-
-        if(!tempUser) {
-            return res.status(404).json({success: false, message: "User not found"});
-        }
-
-        if(tempUser.username !== username) {
-            const userWithSameUsername = await User.findOne({ username });
-            if(userWithSameUsername) {
-                res.status(400).json({success: false, message: "Username already taken"});
-                username = tempUser.username;
-            }
-        }
-
-        !username && (username = tempUser.username);
-
-        const updatedData = {
-            full_name,
-            username,
-            bio,
-            location,
-        }
-
-        const profile = req.file.profile && req.file.profile[0];
-        const cover = req.file.cover && req.file.cover[0];
-
-        if( profile ) {
-            const buffer = fs.readFileSync(profile.path);
-            const response = await imagekit.upload({
-                file : buffer,
-                fileName : profile.originalname,
-            });
-            const url = imagekit.url({
-                path : response.filePath,
-                transformation : [
-                    {quality : "auto"},
-                    {format : "webp"},
-                    {width : "512"},
-                ]
-            });
-            updatedData.profile_picture = url;
-        }
-        if( cover ) {
-            const buffer = fs.readFileSync(cover.path);
-            const response = await imagekit.upload({
-                file : buffer,
-                fileName : profile.originalname,
-            });
-            const url = imagekit.url({
-                path : response.filePath,
-                transformation : [
-                    {quality : "auto"},
-                    {format : "webp"},
-                    {width : "1280"},
-                ]
-            });
-            updatedData.cover_photo = url;
-        }
-
-        const user = await User.findByIdAndUpdate(userId, updatedData, { new: true });
-        res.json({success: true, user, message: "Profile updated successfully"});
+    const tempUser = await User.findById(userId);
+    if (!tempUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
     }
-    catch(error){
-        res.status(500).json({success: false, message: error.message});
+
+    if (tempUser.username !== username) {
+      const userWithSameUsername = await User.findOne({ username });
+      if (userWithSameUsername) {
+        res.status(400).json({ success: false, message: "Username already taken" });
+        username = tempUser.username;
+      }
     }
-}
+
+    !username && (username = tempUser.username);
+
+    const updatedData = { full_name, username, bio, location };
+    console.log(req.body)
+    console.log(updatedData)
+
+    const profile = req.files?.profile?.[0] || null;
+    const cover   = req.files?.cover?.[0] || null;
+
+    if (profile) {
+      console.log("Profile path:", profile.path);
+      if (!fs.existsSync(profile.path)) {
+        throw new Error(`Profile file not found at ${profile.path}`);
+      }
+
+      const buffer = fs.readFileSync(profile.path);
+      const response = await imagekit.upload({
+        file: buffer,
+        fileName: profile.originalname,
+      });
+
+      const url = imagekit.url({
+        path: response.filePath,
+        transformation: [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: "512" },
+        ],
+      });
+
+      updatedData.profile_picture = url;
+
+      fs.unlinkSync(profile.path); // cleanup
+    }
+
+    if (cover) {
+      console.log("Cover path:", cover.path);
+      if (!fs.existsSync(cover.path)) {
+        throw new Error(`Cover file not found at ${cover.path}`);
+      }
+
+      const buffer = fs.readFileSync(cover.path);
+      const response = await imagekit.upload({
+        file: buffer,
+        fileName: cover.originalname, // ✅ fixed bug
+      });
+
+      const url = imagekit.url({
+        path: response.filePath,
+        transformation: [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: "1280" },
+        ],
+      });
+
+      updatedData.cover_photo = url;
+
+      fs.unlinkSync(cover.path); // cleanup
+    }
+
+    const user = await User.findByIdAndUpdate(userId, updatedData, { new: true });
+    res.json({ success: true, user, message: "Profile updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 export const discoverUser = async (req, res) => {
     try{

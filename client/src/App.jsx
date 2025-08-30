@@ -7,15 +7,24 @@ import Messages from './pages/Messages'
 import Profile from './pages/profile'
 import ChatBox from './pages/chatBox'
 import CreatePost from './pages/createPost'
-import { useUser } from '@clerk/clerk-react'
+import { useUser, useAuth} from '@clerk/clerk-react'
 import './index.css'
 import Layout from './pages/Layout'
 import Loading from './components/Loading'
 import {Toaster} from 'react-hot-toast'
 import Connections from './pages/Connections'
+import { useEffect } from 'react'
+
 const App = () => {
   const { isLoaded, user } = useUser()
-
+  const {getToken} = useAuth()
+  useEffect(() => {
+  if (user) {
+    getToken().then((token) => {
+      console.log(token);
+    });
+  }
+}, [user]);
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-900 via-black to-gray-800 text-white">
