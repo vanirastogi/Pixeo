@@ -137,6 +137,7 @@ export const followUser = async (req, res) => {
     try{
         const { userId } = req.auth();
         const { id } = req.body;
+        console.log(req.body)
 
         const userToFollow = await User.findById(id);
         const currentUser = await User.findById(userId);
